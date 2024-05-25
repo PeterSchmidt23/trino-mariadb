@@ -1,0 +1,34 @@
+version: '3.7'
+
+volumes:
+  data:
+
+services:
+  trino-coordinator:
+    image: 'trinodb/trino:latest'
+    hostname: trino-coordinator
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./etc:/etc/trino
+    networks:
+      - trino-network
+
+  mariadb:
+    image: mariadb:latest
+    hostname: maridb
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: tiny
+    volumes:
+      - data:/var/lib/mysql      
+    ports:
+      - '3306:3306'
+    networks:
+      - trino-network
+networks:
+  trino-network:
+    driver: bridge
+
